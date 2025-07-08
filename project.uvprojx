@@ -389,6 +389,16 @@
               <FileType>1</FileType>
               <FilePath>applications\main.c</FilePath>
             </File>
+            <File>
+              <FileName>app_adc_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\app_adc_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\app_timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

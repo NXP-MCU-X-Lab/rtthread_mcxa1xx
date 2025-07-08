@@ -59,6 +59,8 @@ void BOARD_InitPins(void)
     RESET_ReleasePeripheralReset(kLPSPI0_RST_SHIFT_RSTn);
     RESET_ReleasePeripheralReset(kLPSPI1_RST_SHIFT_RSTn);
 
+    RESET_ReleasePeripheralReset(kADC0_RST_SHIFT_RSTn);
+    
     RESET_ReleasePeripheralReset(kLPI2C0_RST_SHIFT_RSTn);
     RESET_ReleasePeripheralReset(kFLEXPWM0_RST_SHIFT_RSTn);
 
@@ -71,6 +73,22 @@ void BOARD_InitPins(void)
     RESET_ReleasePeripheralReset(kGPIO1_RST_SHIFT_RSTn);
     RESET_ReleasePeripheralReset(kGPIO2_RST_SHIFT_RSTn);
     RESET_ReleasePeripheralReset(kGPIO3_RST_SHIFT_RSTn);
+
+    /* Configure P2_0 as ADC0_A0 */
+    const port_pin_config_t port2_0_config = {
+        kPORT_PullDisable,           /* Disable internal pull-up/down resistor */
+        kPORT_LowPullResistor,
+        kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable,
+        kPORT_OpenDrainDisable,
+        kPORT_LowDriveStrength,
+        kPORT_NormalDriveStrength,
+        kPORT_MuxAlt0,               /* Pin is configured as ADC0_A0 */
+        kPORT_InputBufferDisable,    /* Digital input disabled; required for analog functions */
+        kPORT_InputNormal,
+        kPORT_UnlockRegister
+    };
+    PORT_SetPinConfig(PORT2, 0U, &port2_0_config);
 
     const port_pin_config_t port0_2_pin51_config = {/* Internal pull-up resistor is enabled */
                                                     kPORT_PullUp,

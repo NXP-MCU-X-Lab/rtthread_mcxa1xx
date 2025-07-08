@@ -13,11 +13,16 @@
  */
 #include <rtdevice.h>
 #include "drv_pin.h"
+#include "app_adc_dma.h"
+#include "app_timer.h"
+
 
 #define LED_PIN        ((3*32)+12)
 
 int main(void)
 {
+    float elapsed_time_us;
+    
 #if defined(__CC_ARM)
     rt_kprintf("using armcc, version: %d\n", __ARMCC_VERSION);
 #elif defined(__clang__)
@@ -29,8 +34,34 @@ int main(void)
 #endif
 
     rt_pin_mode(LED_PIN, PIN_MODE_OUTPUT);  /* Set GPIO as Output */
-    rt_kprintf("MCXA153 HelloWorld\n");
+    rt_kprintf("MCXA153 ADC DMA example\n");
 
+    /* DMA ADC Timer Demo */
+    rt_kprintf("\r\n--- DMA ADC TIMER trigger DEMO ---\r\n");
+
+    TIMER_Init();
+    
+    ADC_DMA_Timer_Init();
+    ADC_DMA_Timer_SetSampleRate(6400); /* 6.4kHz for 128 samples in ~20ms */
+    
+    /* Record start time */
+    TIMER_Start();
+
+    /* Start sampling */
+    ADC_DMA_Timer_StartTransfer();
+
+    /* Wait for completion */
+    while (!ADC_DMA_Timer_IsComplete()) {
+        //__NOP();
+    }
+    
+    /* Calculate elapsed time */
+    elapsed_time_us = TIMER_Stop();
+    rt_kprintf("ADC Conversion Time: %.1f ms\r\n", elapsed_time_us / 1000);
+    
+    /* Show results */
+    ADC_DMA_Timer_PrintResults();
+                        
     while (1)
     {
         rt_pin_write(LED_PIN, PIN_HIGH);    /* Set GPIO output 1 */
